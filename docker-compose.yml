@@ -1,0 +1,9 @@
+version: '3.8'
+services:
+ frontend:
+   build: .
+   container_name: fe
+   image: yubisayu/literature-fe:stable
+   stdin_open: true
+   ports:
+    - 3030:3000
