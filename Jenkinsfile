@@ -1,4 +1,4 @@
-def secret = 'akmall'
+def secret = 'akmalll'
 def server = 'apps@103.174.114.24'
 def directory = 'literature-frontend'
 def branch = 'production'
