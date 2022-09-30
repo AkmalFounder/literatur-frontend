@@ -40,18 +40,7 @@ pipeline{
                     EOF"""
                 }
             }
-        }
-	stage ('push docker hub'){
-            steps{
-                sshagent([credential]) {
-                    sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
-                    cd ${directory}
-                    docker push ${images}
-                    exit
-                    EOF"""
-               }
-            }
-        }    
+        }  
         stage ('Send Notification'){
            steps{
                 discordSend description: 'Pipeline Succes Push', footer: '', image: '', link: '', result: '', scmWebUrl: '', thumbnail: '', title: 'Om Jenkins datang',
