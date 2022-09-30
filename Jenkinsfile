@@ -43,7 +43,7 @@ pipeline{
         }
         stage ('Send Notification'){
            steps{
-                discordSend description: 'Frontend Pipeline Succesfull', footer: '', image: '', link: '', result: '', scmWebUrl: '', thumbnail: '', title: 'Jenkins Notif',
+                discordSend description: 'Pipeline Succes Push', footer: '', image: '', link: '', result: '', scmWebUrl: '', thumbnail: '', title: 'Om Jenkins datang',
                 webhookURL: 'https://discord.com/api/webhooks/1020148936972968028/h0Zt34JAcxRW36OaKkxAV1K_bmYyp7L5XVIX13yZ-nUzD9Lo6dTwsLubxNCkqurB_cOB'
 		}
 	   }
