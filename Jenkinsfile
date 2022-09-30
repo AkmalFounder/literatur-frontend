@@ -6,7 +6,7 @@ def branch = 'production'
 pipeline{
     agent any
     stages{
-        stage ('compose down &  pull'){
+        stage ('Docker compose first'){
             steps{
                 sshagent([secret]) {
                     sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
@@ -30,7 +30,7 @@ pipeline{
                 }
             }
         }
-        stage ('docker up'){
+        stage ('up container'){
             steps{
                 sshagent([secret]) {
                     sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
@@ -41,6 +41,11 @@ pipeline{
                 }
             }
         }
+        stage ('Send Notification'){
+           steps{
+                discordSend description: 'Frontend Pipeline Succesfull', footer: '', image: '', link: '', result: '', scmWebUrl: '', thumbnail: '', title: 'Jenkins Notif',
+                webhookURL: 'https://discord.com/api/webhooks/1020148936972968028/h0Zt34JAcxRW36OaKkxAV1K_bmYyp7L5XVIX13yZ-nUzD9Lo6dTwsLubxNCkqurB_cOB'
+		}
+	   }
     }
 }
-
