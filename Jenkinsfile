@@ -6,13 +6,13 @@ def branch = 'production'
 pipeline{
         agent any
         stages{
-                stage ('Delete container and images & git pull'){
+                stage ('Docker compose'){
                         steps{
                                 sshagent([secret]) {
                                         sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
                                         cd ${dir}
-                                        #docker-compose down
-                                        #docker system prune -f
+                                        docker-compose down
+                                        docker system prune -f
                                         git pull origin1 ${branch}
                                         exit
                                         EOF"""
@@ -24,13 +24,13 @@ pipeline{
                                 sshagent([secret]) {
                                         sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
                                         cd ${dir}
-                                        #docker build -t ${images} .
+                                        docker build -t ${images} .
                                         exit
                                         EOF"""
                                 }
                         }
                 }
-        stage ('Create Container with compose'){
+        stage ('Create Container'){
                         steps{
                                 sshagent([secret]) {
                                         sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
@@ -43,7 +43,7 @@ pipeline{
                         }
 
                }
-        stage ('Send Notification'){
+        stage ('Notification'){
                         steps{
                                 discordSend description: 'Frontend Pipeline Succesfull', footer: '', image: '', link: '', result: '', scmWebUrl: '', thumbnail: '', title: 'Jenkins Notif',
                                 webhookURL: 'https://discord.com/api/webhooks/1020148936972968028/h0Zt34JAcxRW36OaKkxAV1K_bmYyp7L5XVIX13yZ-nUzD9Lo6dTwsLubxNCkqurB_cOB'
