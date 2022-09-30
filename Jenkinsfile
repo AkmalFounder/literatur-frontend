@@ -6,19 +6,19 @@ def branch = 'production'
 pipeline{
         agent any
         stages{
-                stage ('Docker compose'){
-                        steps{
-                                sshagent([secret]) {
-                                        sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
-                                        cd ${dir}
-                                        docker-compose down
-                                        docker system prune -f
-                                        git pull origin1 ${branch}
-                                        exit
-                                        EOF"""
-                                }
-                        }
-                }
+	    stage ('compose down &  pull'){
+		steps{
+	            sshagent([secret]) {
+			sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
+			cd ${directory}
+			docker-compose down
+			docker system prune -f
+			git pull origin ${branch}
+			exit
+			EOF"""
+		    }
+		}
+	    }
         stage ('Build Images'){
                         steps{
                                 sshagent([secret]) {
