@@ -50,7 +50,7 @@ pipeline{
                    exit
                    EOF"""
                }
-            }
+           }
         }	    
         stage ('Send Notification'){
            steps{
