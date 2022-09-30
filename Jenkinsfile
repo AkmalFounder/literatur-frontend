@@ -42,13 +42,13 @@ pipeline{
             }
         }
         stage ('push docker hub'){
-            steps{
-                sshagent([credential]) {
-                    sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
-                    cd ${directory}
-                    docker push ${images}
-                    exit
-                    EOF"""
+           steps{
+               sshagent([credential]) {
+                   sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
+                   cd ${directory}
+                   docker push ${images}
+                   exit
+                   EOF"""
                }
             }
         }	    
