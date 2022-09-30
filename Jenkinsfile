@@ -4,51 +4,43 @@ def directory = 'literature-frontend'
 def branch = 'production'
 
 pipeline{
-        agent any
-        stages{
-	    stage ('compose down &  pull'){
-		steps{
-	            sshagent([secret]) {
-			sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
-			cd ${directory}
-			docker-compose down
-			docker system prune -f
-			git pull origin ${branch}
-			exit
-			EOF"""
-		    }
-		}
-	    }
-        stage ('Build Images'){
-                steps{
-                    sshagent([secret]) {
-                       sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
-                       cd ${dir}
-                       docker build -t ${images} .
-                       exit
-                       EOF"""
-                       }
-                 }
+    agent any
+    stages{
+        stage ('compose down &  pull'){
+            steps{
+                sshagent([secret]) {
+                    sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
+                    cd ${directory}
+                    docker-compose down
+                    docker system prune -f
+                    git pull origin ${branch}
+                    exit
+                    EOF"""
+                }
             }
-        stage ('Create Container'){
-                        steps{
-                                sshagent([secret]) {
-                                        sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
-                                        cd ${dir}
-                                        docker-compose up -d
-                                        exit
-                                        EOF"""
-                                }
-
-                        }
-
-               }
-        stage ('Notification'){
-                        steps{
-                                discordSend description: 'Frontend Pipeline Succesfull', footer: '', image: '', link: '', result: '', scmWebUrl: '', thumbnail: '', title: 'Jenkins Notif',
-                                webhookURL: 'https://discord.com/api/webhooks/1020148936972968028/h0Zt34JAcxRW36OaKkxAV1K_bmYyp7L5XVIX13yZ-nUzD9Lo6dTwsLubxNCkqurB_cOB'
-				}
-			}
         }
-
+        stage ('docker build'){
+            steps{
+                sshagent([secret]) {
+                    sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
+                    cd ${directory}
+                    docker-compose build
+                    exit
+                    EOF"""
+                }
+            }
+        }
+        stage ('docker up'){
+            steps{
+                sshagent([secret]) {
+                    sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
+                    cd ${directory}
+                    docker-compose up -d
+                    exit
+                    EOF"""
+                }
+            }
+        }
+    }
 }
+
