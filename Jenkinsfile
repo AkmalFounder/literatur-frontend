@@ -20,16 +20,16 @@ pipeline{
 		}
 	    }
         stage ('Build Images'){
-                        steps{
-                                sshagent([secret]) {
-                                        sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
-                                        cd ${dir}
-                                        docker build -t ${images} .
-                                        exit
-                                        EOF"""
-                                }
-                        }
-                }
+                steps{
+                    sshagent([secret]) {
+                       sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
+                       cd ${dir}
+                       docker build -t ${images} .
+                       exit
+                       EOF"""
+                       }
+                 }
+            }
         stage ('Create Container'){
                         steps{
                                 sshagent([secret]) {
